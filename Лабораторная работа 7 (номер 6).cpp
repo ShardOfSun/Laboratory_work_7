@@ -14,11 +14,12 @@ using std::endl;
 using std::string;
 using std::fstream;
 
-int checkN(string n); // Проверка ввода
+int checkN(string, int); // Проверка ввода
 bool contin(); // Интерфейс
 string solution(string); // Проверка идентификатора
 void mistake(); // Вывод сообщ-я об ошибке
 void end(); // Вывод сообщ-я о завершении раб-ты
+int numofex(); // Вывод примеров и подсчёт их кол-ва
 
 int main()
 {
@@ -28,14 +29,16 @@ int main()
 	{	// Чтение файла
 		fstream fin = fstream("TextFile.txt");
 		if (!fin) { cout << "Ошибка в чтении файла!" << endl;	end();	break;	}
-
+		
 		// Ввод выбора примера исходных данных
-		cout << "Какой пример использовать?" << endl << "от (1)-го до (7)-го / Закрыть программу (0)" << endl;
+		cout << "Какой пример использовать?" << endl; 
+		int q = numofex(); // Кол-во строк (примеров) в файле
+		cout << "(0) Закрыть программу" << endl;
 		string chex;
 		getline(cin, chex);
 
 		// Проверка верности введённого знач-ия и запуск заного из-за ошибки или завершение работы прогр-мы
-		int ex = checkN(chex);
+		int ex = checkN(chex, q);
 		if (ex == -1)	{	continue;	}
 		else if (ex == 0)	{	break; }
 		
@@ -46,27 +49,42 @@ int main()
 		{	getline(fin, str);	++i;	}
 
 		// Вывод исходных данных и результата работы прогр-мы
-		cout << "Строка в файле:" << endl << "\"" << str << "\"" << endl;
 		cout << "Результат проверки идентификатора:" << endl << solution(str) /* Проверка идентификатора */ << endl;
 
 		// Интерфейс
 		if (contin())
 			continue;
+		fin.close();
 		break;	}
 
 	return 0;
 }
 
+// Вывод примеров и подсчёт их кол-ва
+int numofex()
+{
+	fstream fin = fstream("TextFile.txt");
+	
+	int q = 0;
+	string str;
+	while (!fin.eof()) 
+	{	q++;	getline(fin, str);	
+	cout << "(" << q << ") \"" << str << "\"" << endl;	}
+
+	fin.close();
+	return q;
+}
+
 // Проверка ввода
-int checkN(string n)
+int checkN(string n, int q)
 {	
 	// Если введённое значение длиннее 1-го симв-ла или не цифра
 	if (n.length() != 1 || !isdigit(n[0]))
 	{	mistake();	return -1; }
-	
+
 	// Раз цифра, то какая 
 	int b = atoi(n.c_str());
-	if (b >= 0 || b <= 7)	{	return b;	} // Если от 0 до 7, то её и возврщаем
+	if (b >= 0 && b <= q) { return b; } // Если от 0 до 7, то её и возвращаем
 	else	{	mistake();	return -1;	} // Если нет, то ошибка
 }
 
