@@ -67,7 +67,7 @@ int checkN(string n)
 	
 	// Раз цифра, то какая 
 	int b = atoi(n.c_str());
-	if (b >= 0 || b <= 7)	{	return b;	} // Если от 0 до 7, то её и возврщаем
+	if (b >= 0 || b <= 7)	{	return b;	} // Если от 0 до 7, то её и возвращаем
 	else	{	mistake();	return -1;	} // Если нет, то ошибка
 }
 
